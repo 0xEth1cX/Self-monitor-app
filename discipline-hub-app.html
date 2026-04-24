@@ -813,36 +813,39 @@ function useConfirm() {
 }
 const inp = {
   width: "100%",
-  padding: "10px 14px",
+  padding: "11px 14px",
   background: C.surface,
   border: `1px solid ${C.border}`,
-  borderRadius: 8,
+  borderRadius: 10,
   color: C.text,
   fontSize: 14,
-  fontFamily: "'JetBrains Mono',monospace",
+  fontFamily: "'Inter','DM Sans',system-ui,sans-serif",
   outline: "none",
-  boxSizing: "border-box"
+  boxSizing: "border-box",
+  lineHeight: 1.4
 };
 const btn = p => ({
-  padding: "10px 20px",
+  padding: "11px 20px",
   background: p ? C.accent : "transparent",
   color: p ? C.bg : C.text,
   border: p ? "none" : `1px solid ${C.border}`,
-  borderRadius: 8,
+  borderRadius: 10,
   cursor: "pointer",
   fontSize: 13,
-  fontFamily: "'JetBrains Mono',monospace",
+  fontFamily: "'Inter','DM Sans',system-ui,sans-serif",
   fontWeight: 600,
-  transition: "all .2s"
+  transition: "all .18s ease",
+  letterSpacing: "0.01em"
 });
 const lbl = {
   display: "block",
-  marginBottom: 6,
+  marginBottom: 7,
   fontSize: 11,
   color: C.textDim,
-  fontFamily: "'JetBrains Mono',monospace",
+  fontFamily: "'Inter',system-ui,sans-serif",
   textTransform: "uppercase",
-  letterSpacing: 1
+  letterSpacing: "0.08em",
+  fontWeight: 600
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -6297,6 +6300,7 @@ function App() {
   const [inbox, setInbox, il] = useStorage("dh3-inbox", []);
   const [challenges, setChallenges, cl] = useStorage("dh3-challenges", []);
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   useEffect(() => {
     if ("Notification" in window && Notification.permission === "default") Notification.requestPermission();
   }, []);
@@ -6398,17 +6402,26 @@ function App() {
     style: {
       minHeight: "100vh",
       background: C.bg,
-      fontFamily: "'DM Sans',sans-serif",
+      fontFamily: "'Inter','DM Sans',system-ui,-apple-system,sans-serif",
       color: C.text,
       display: "flex",
-      flexDirection: "column"
+      flexDirection: "column",
+      letterSpacing: "-0.005em",
+      lineHeight: 1.5
     },
     onClick: () => {
       if (typeof Notification !== "undefined" && Notification.permission === "default") Notification.requestPermission();
     }
   }, /*#__PURE__*/React.createElement("style", null, `
-      @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-      *{box-sizing:border-box;} ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:${C.bg};} ::-webkit-scrollbar-thumb{background:${C.border};border-radius:3px;}
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+      *{box-sizing:border-box;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+      body{text-rendering:optimizeLegibility;}
+      ::-webkit-scrollbar{width:6px;height:6px;} ::-webkit-scrollbar-track{background:${C.bg};} ::-webkit-scrollbar-thumb{background:${C.border};border-radius:4px;} ::-webkit-scrollbar-thumb:hover{background:${C.borderLight};}
+      h1,h2,h3,h4{letter-spacing:-0.015em;line-height:1.25;}
+      p{line-height:1.6;}
+      button{letter-spacing:0.005em;}
+      input,textarea,select{font-family:'Inter','DM Sans',system-ui,sans-serif;}
+      .mono{font-family:'JetBrains Mono',monospace;letter-spacing:0;}
       @keyframes spin{to{transform:rotate(360deg)}}
       @keyframes strikeIn{to{stroke-dashoffset:0}}
       @keyframes pulseDot{0%,100%{opacity:1;transform:translateX(-50%) scale(1)}50%{opacity:.4;transform:translateX(-50%) scale(1.5)}}
@@ -6416,8 +6429,8 @@ function App() {
       @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
       @keyframes bellRing{0%{transform:rotate(-15deg) scale(1)}100%{transform:rotate(15deg) scale(1.1)}}
       @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-      input:focus,textarea:focus,select:focus{border-color:${C.accent}!important;box-shadow:0 0 0 2px ${C.accentGlow};} select{appearance:auto;}
-      button:hover{opacity:.9;} input[type=range]{height:4px;}
+      input:focus,textarea:focus,select:focus{border-color:${C.accent}!important;box-shadow:0 0 0 3px ${C.accentGlow};} select{appearance:auto;}
+      button:hover{opacity:.92;transform:translateY(-1px);} button:active{transform:translateY(0);}
       input[type="date"]::-webkit-calendar-picker-indicator,
       input[type="time"]::-webkit-calendar-picker-indicator,
       input[type="datetime-local"]::-webkit-calendar-picker-indicator{filter:invert(1) brightness(1.8);cursor:pointer;padding:4px;}
@@ -6426,11 +6439,15 @@ function App() {
       input[type="number"]::-webkit-inner-spin-button{filter:invert(1) brightness(1.5);}
       @media(max-width:767px){
         .desktop-sidebar{display:none!important;}
-        .mobile-bottom-nav{display:flex!important;}
-        .main-content{padding:12px!important;max-height:calc(100vh - 49px - 64px)!important;padding-bottom:12px!important;}
+        .main-content{padding:18px 16px!important;padding-bottom:96px!important;}
         .header-version{display:none!important;}
         .header-title{font-size:14px!important;}
-        .modal-inner{width:95vw!important;padding:18px!important;max-height:92vh!important;}
+        .modal-inner{width:calc(100vw - 24px)!important;padding:22px!important;max-height:calc(100vh - 48px)!important;}
+        h2{font-size:20px!important;}
+        h3{font-size:16px!important;}
+      }
+      @media(min-width:768px){
+        .main-content{padding:26px 28px!important;}
       }
       @media(min-width:768px){
         .desktop-sidebar{display:flex!important;}
@@ -6440,49 +6457,65 @@ function App() {
     style: {
       background: C.surface,
       borderBottom: `1px solid ${C.border}`,
-      padding: isMobile ? "8px 14px" : "10px 20px",
+      padding: isMobile ? "10px 16px" : "12px 24px",
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
-      flexShrink: 0
+      flexShrink: 0,
+      minHeight: 56,
+      boxSizing: "border-box"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       alignItems: "center",
-      gap: isMobile ? 8 : 10
+      gap: isMobile ? 10 : 12
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      width: isMobile ? 26 : 30,
-      height: isMobile ? 26 : 30,
-      borderRadius: 8,
+      width: isMobile ? 30 : 34,
+      height: isMobile ? 30 : 34,
+      borderRadius: 9,
       background: `linear-gradient(135deg,${C.accent},${C.accentDim})`,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      fontSize: isMobile ? 12 : 14
+      fontSize: isMobile ? 13 : 15,
+      flexShrink: 0
     }
   }, "\u26A1"), /*#__PURE__*/React.createElement("span", {
-    className: "header-title",
+    className: "header-title mono",
     style: {
-      fontSize: 16,
+      fontSize: 15,
       fontWeight: 700,
-      fontFamily: "'JetBrains Mono',monospace",
-      letterSpacing: 1,
+      letterSpacing: "0.08em",
       color: C.accent
     }
   }, "DISCIPLINE HUB"), !isMobile && /*#__PURE__*/React.createElement("span", {
-    className: "header-version",
+    className: "header-version mono",
     style: {
       fontSize: 10,
       color: C.textDim,
-      fontFamily: "'JetBrains Mono',monospace",
       background: C.card,
-      padding: "2px 8px",
-      borderRadius: 6
+      padding: "3px 9px",
+      borderRadius: 7,
+      letterSpacing: "0.05em"
     }
-  }, "v3.0")), /*#__PURE__*/React.createElement(SyncStatus, null)), /*#__PURE__*/React.createElement("div", {
+  }, "v3.0")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 7,
+      height: 7,
+      borderRadius: "50%",
+      background: C.green,
+      boxShadow: `0 0 8px ${C.green}`
+    }
+  }))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       flex: 1,
@@ -6492,14 +6525,14 @@ function App() {
   }, /*#__PURE__*/React.createElement("div", {
     className: "desktop-sidebar",
     style: {
-      width: collapsed ? 56 : 195,
+      width: collapsed ? 60 : 210,
       background: C.surface,
       borderRight: `1px solid ${C.border}`,
-      padding: `12px ${collapsed ? 6 : 8}px`,
+      padding: `14px ${collapsed ? 8 : 12}px`,
       display: "flex",
       flexDirection: "column",
-      gap: 2,
-      transition: "width .2s",
+      gap: 3,
+      transition: "width .2s ease",
       flexShrink: 0,
       overflowY: "auto"
     }
@@ -6509,12 +6542,13 @@ function App() {
       background: "none",
       border: "none",
       cursor: "pointer",
-      padding: "6px 8px",
-      marginBottom: 6,
+      padding: "8px 10px",
+      marginBottom: 8,
       display: "flex",
       alignItems: "center",
       justifyContent: collapsed ? "center" : "flex-end",
-      color: C.textDim
+      color: C.textDim,
+      borderRadius: 8
     }
   }, /*#__PURE__*/React.createElement(I, {
     d: collapsed ? ic.chevR : ic.chevL,
@@ -6528,26 +6562,26 @@ function App() {
       style: {
         display: "flex",
         alignItems: "center",
-        gap: 10,
-        padding: collapsed ? "9px 0" : "8px 12px",
-        borderRadius: 8,
+        gap: 12,
+        padding: collapsed ? "11px 0" : "10px 14px",
+        borderRadius: 10,
         border: "none",
         background: active ? `${t.color}18` : "transparent",
         color: active ? t.color : C.textDim,
         cursor: "pointer",
-        fontSize: 12,
-        fontFamily: "'JetBrains Mono',monospace",
-        fontWeight: active ? 600 : 400,
-        transition: "all .15s",
+        fontSize: 13,
+        fontWeight: active ? 600 : 500,
+        transition: "all .15s ease",
         textAlign: "left",
         justifyContent: collapsed ? "center" : "flex-start",
         width: "100%",
-        position: "relative"
+        position: "relative",
+        letterSpacing: "0.005em"
       }
     }, /*#__PURE__*/React.createElement(I, {
       d: ic[t.icon],
       c: active ? t.color : C.textDim,
-      s: 16
+      s: 17
     }), !collapsed && /*#__PURE__*/React.createElement("span", null, t.label), active && /*#__PURE__*/React.createElement("div", {
       style: {
         position: "absolute",
@@ -6567,9 +6601,8 @@ function App() {
     className: "main-content",
     style: {
       flex: 1,
-      padding: isMobile ? 14 : 22,
       overflowY: "auto",
-      maxHeight: isMobile ? "calc(100vh - 49px - 64px)" : "calc(100vh - 49px)"
+      maxHeight: "calc(100vh - 56px)"
     }
   }, /*#__PURE__*/React.createElement(AlarmProvider, {
     reminders: reminders,
@@ -6639,63 +6672,191 @@ function App() {
       setInbox,
       setChallenges
     }
-  }))))), /*#__PURE__*/React.createElement("div", {
-    className: "mobile-bottom-nav",
+  }))))), isMobile && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setMobileMenuOpen(true),
+    "aria-label": "Open menu",
     style: {
-      display: "none",
+      position: "fixed",
+      bottom: 20,
+      right: 20,
+      zIndex: 900,
+      width: 56,
+      height: 56,
+      borderRadius: "50%",
+      border: "none",
+      background: `linear-gradient(135deg,${C.accent},${C.orange})`,
+      boxShadow: `0 8px 24px ${C.accent}66, 0 2px 6px rgba(0,0,0,0.3)`,
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      transition: "transform .15s ease"
+    },
+    onMouseDown: e => e.currentTarget.style.transform = "scale(0.92)",
+    onMouseUp: e => e.currentTarget.style.transform = "scale(1)",
+    onTouchStart: e => e.currentTarget.style.transform = "scale(0.92)",
+    onTouchEnd: e => e.currentTarget.style.transform = "scale(1)"
+  }, /*#__PURE__*/React.createElement(I, {
+    d: ic[tabs.find(t => t.id === tab)?.icon || "dashboard"],
+    c: C.bg,
+    s: 24
+  })), mobileMenuOpen && /*#__PURE__*/React.createElement("div", {
+    onClick: () => setMobileMenuOpen(false),
+    style: {
+      position: "fixed",
+      inset: 0,
+      zIndex: 950,
+      background: "rgba(0,0,0,0.6)",
+      backdropFilter: "blur(4px)",
+      animation: "fadeIn .2s ease"
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "fixed",
+      top: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 960,
+      width: "min(280px,80vw)",
       background: C.surface,
-      borderTop: `1px solid ${C.border}`,
-      flexShrink: 0,
-      overflowX: "auto",
-      WebkitOverflowScrolling: "touch"
+      borderLeft: `1px solid ${C.border}`,
+      boxShadow: "-10px 0 40px rgba(0,0,0,0.5)",
+      transform: mobileMenuOpen ? "translateX(0)" : "translateX(100%)",
+      transition: "transform .28s cubic-bezier(0.32, 0.72, 0, 1)",
+      display: "flex",
+      flexDirection: "column"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "22px 22px 16px",
+      borderBottom: `1px solid ${C.border}`,
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
-      minWidth: "max-content",
-      padding: "6px 4px",
-      gap: 2
+      alignItems: "center",
+      gap: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 36,
+      height: 36,
+      borderRadius: 10,
+      background: `linear-gradient(135deg,${C.accent},${C.accentDim})`,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: 17
+    }
+  }, "\u26A1"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "mono",
+    style: {
+      fontSize: 13,
+      fontWeight: 700,
+      color: C.accent,
+      letterSpacing: "0.08em",
+      lineHeight: 1.2
+    }
+  }, "DISCIPLINE"), /*#__PURE__*/React.createElement("div", {
+    className: "mono",
+    style: {
+      fontSize: 10,
+      color: C.textDim,
+      letterSpacing: "0.05em",
+      marginTop: 2
+    }
+  }, "v3.0 \u2022 Navigation"))), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setMobileMenuOpen(false),
+    "aria-label": "Close",
+    style: {
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      padding: 8,
+      borderRadius: 8,
+      display: "flex"
+    }
+  }, /*#__PURE__*/React.createElement(I, {
+    d: ic.x,
+    c: C.textDim,
+    s: 18
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      padding: "14px 12px",
+      overflowY: "auto"
     }
   }, tabs.map(t => {
     const active = tab === t.id;
     return /*#__PURE__*/React.createElement("button", {
       key: t.id,
-      onClick: () => setTab(t.id),
+      onClick: () => {
+        setTab(t.id);
+        setMobileMenuOpen(false);
+      },
       style: {
         display: "flex",
-        flexDirection: "column",
         alignItems: "center",
-        gap: 2,
-        padding: "6px 10px",
-        minWidth: 54,
-        borderRadius: 8,
+        gap: 14,
+        padding: "12px 14px",
+        marginBottom: 4,
+        borderRadius: 12,
         border: "none",
+        width: "100%",
         background: active ? `${t.color}18` : "transparent",
+        color: active ? t.color : C.text,
         cursor: "pointer",
-        flexShrink: 0
+        fontSize: 14,
+        fontWeight: active ? 600 : 500,
+        textAlign: "left",
+        position: "relative",
+        transition: "background .15s ease",
+        letterSpacing: "0.005em",
+        lineHeight: 1.4
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 38,
+        height: 38,
+        borderRadius: 11,
+        flexShrink: 0,
+        background: active ? `${t.color}22` : C.card,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        border: active ? `1px solid ${t.color}44` : `1px solid ${C.border}`
       }
     }, /*#__PURE__*/React.createElement(I, {
       d: ic[t.icon],
       c: active ? t.color : C.textDim,
-      s: 18
-    }), /*#__PURE__*/React.createElement("span", {
+      s: 17
+    })), /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 8,
-        color: active ? t.color : C.textDim,
-        fontFamily: "'JetBrains Mono',monospace",
-        fontWeight: active ? 700 : 400,
-        whiteSpace: "nowrap"
+        flex: 1
       }
     }, t.label), active && /*#__PURE__*/React.createElement("div", {
       style: {
-        width: 16,
-        height: 2,
-        borderRadius: 1,
+        width: 6,
+        height: 6,
+        borderRadius: "50%",
         background: t.color,
-        marginTop: -1
+        boxShadow: `0 0 8px ${t.color}`
       }
     }));
-  }))));
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mono",
+    style: {
+      padding: "14px 22px",
+      borderTop: `1px solid ${C.border}`,
+      fontSize: 10,
+      color: C.textDim,
+      textAlign: "center",
+      letterSpacing: "0.03em"
+    }
+  }, "Tap outside to close"))));
 }
 function SyncedApp() {
   return React.createElement(SyncProvider, null, React.createElement(App));
