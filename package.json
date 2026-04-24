@@ -1,7 +1,7 @@
 {
-  "name": "discipline-hub-sync-server",
+  "name": "self-monitor-app",
   "version": "1.0.0",
-  "description": "Sync server for Discipline Hub app",
+  "description": "Sync server for Self-monitor-app",
   "main": "sync-server.js",
   "scripts": {
     "start": "node sync-server.js"
